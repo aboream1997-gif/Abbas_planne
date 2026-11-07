@@ -1,0 +1,467 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a1a3f"><style>:root{color-scheme:light dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+<title>ABBAS PLANNER</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@600;800&display=swap">
+<style>
+/* Layout: phone-first single column. Navy hero band with the daily quote, two stat tiles, four tab tiles, then a day-by-day task list. */
+:root{
+  --hero-a:#0a1a3f; --hero-b:#173560; --gold:#d6a62a; --gold-ink:#7a5a05;
+  --bg:#f0f3fa; --card:#ffffff; --line:#dde4f1; --text:#0c1f4a; --muted:#6b7794;
+  --tab:#e3e9f5; --tab-on:#0c1f4a; --tab-on-text:#ffffff;
+  --done:#1f9d6b; --track:#e3e9f5; --bar:#0c1f4a;
+  --c-job-bg:#e6edff; --c-job-fg:#2a4aa8;
+  --c-eng-bg:#e0f5ec; --c-eng-fg:#12714d;
+  --c-app-bg:#fdf0d3; --c-app-fg:#85600a;
+  --lv0:#e3e9f5; --lv1:#c3d0f0; --lv2:#8ea6e2; --lv3:#4a6cc4; --lv4:#d6a62a;
+  --font-ar:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+  --font-num:"Manrope","IBM Plex Sans Arabic","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --hero-a:#07122e; --hero-b:#0f2748; --gold:#e0b440; --gold-ink:#e8c766;
+    --bg:#0a1124; --card:#121c38; --line:#223059; --text:#e9eeff; --muted:#93a0c4;
+    --tab:#17233f; --tab-on:#e0b440; --tab-on-text:#0a1124;
+    --done:#34c48a; --track:#1c2a4d; --bar:#e0b440;
+    --c-job-bg:#1b2c5c; --c-job-fg:#a9c0ff;
+    --c-eng-bg:#133a31; --c-eng-fg:#7fe0b8;
+    --c-app-bg:#3a2f12; --c-app-fg:#f0cd75;
+    --lv0:#1c2a4d; --lv1:#26407a; --lv2:#3a5db0; --lv3:#6f8fe0; --lv4:#e0b440;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --hero-a:#07122e; --hero-b:#0f2748; --gold:#e0b440; --gold-ink:#e8c766;
+  --bg:#0a1124; --card:#121c38; --line:#223059; --text:#e9eeff; --muted:#93a0c4;
+  --tab:#17233f; --tab-on:#e0b440; --tab-on-text:#0a1124;
+  --done:#34c48a; --track:#1c2a4d; --bar:#e0b440;
+  --c-job-bg:#1b2c5c; --c-job-fg:#a9c0ff;
+  --c-eng-bg:#133a31; --c-eng-fg:#7fe0b8;
+  --c-app-bg:#3a2f12; --c-app-fg:#f0cd75;
+  --lv0:#1c2a4d; --lv1:#26407a; --lv2:#3a5db0; --lv3:#6f8fe0; --lv4:#e0b440;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-ar);direction:rtl;line-height:1.55;font-size:16px;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hero-a);z-index:10}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:600px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* hero */
+.hero{background:linear-gradient(165deg,var(--hero-a),var(--hero-b));border-radius:0 0 38px 38px;color:#fff}
+.hero .wrap{padding-block:26px 28px}
+.brand{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.brand h1{margin:0;font-family:var(--font-num);font-weight:800;font-size:clamp(28px,9vw,40px);letter-spacing:.01em;line-height:1.1}
+.brand h1 span{color:var(--gold)}
+.brand p{margin:8px 0 0;color:rgba(255,255,255,.72);font-size:15px}
+.star{flex:none;margin-top:14px;color:var(--gold)}
+.quote{margin-top:24px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:22px;padding:18px 20px}
+.quote small{display:block;color:var(--gold);font-weight:600;font-size:15px;margin-bottom:6px}
+.quote p{margin:0;font-size:20px;line-height:1.6;text-wrap:balance}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.stat{background:var(--card);border-radius:24px;padding:18px 20px;min-width:0;box-shadow:0 1px 0 var(--line)}
+.stat .lbl{color:var(--muted);font-size:15px}
+.stat .val{font-family:var(--font-num);font-weight:800;font-size:32px;margin-top:4px;line-height:1.2}
+.stat .sub{color:var(--muted);font-size:14px;margin-top:2px}
+.bar{height:12px;background:var(--track);border-radius:99px;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);border-radius:99px;transition:width .35s ease}
+
+/* tabs */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.tab{border:0;background:var(--tab);color:var(--text);border-radius:20px;padding:16px 6px;min-height:68px;font-weight:600;font-size:15px;line-height:1.35;text-wrap:balance;display:flex;align-items:center;justify-content:center;text-align:center}
+.tab[aria-selected="true"]{background:var(--tab-on);color:var(--tab-on-text)}
+
+/* shared */
+main{padding-block:8px 28px}
+.sec-title{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px;font-size:20px;font-weight:700}
+.sec-title small{color:var(--muted);font-weight:500;font-size:14px}
+.sec-title em{font-style:normal;background:var(--gold);color:#241a00;border-radius:99px;font-size:12px;font-weight:700;padding:2px 10px}
+.card{background:var(--card);border-radius:22px;padding:18px 20px;box-shadow:0 1px 0 var(--line)}
+.muted{color:var(--muted)}
+
+/* tasks */
+.task{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:22px;padding:18px 20px;margin-bottom:12px;cursor:pointer;box-shadow:0 1px 0 var(--line);user-select:none}
+.check{flex:none;width:38px;height:38px;border-radius:11px;border:2.5px solid var(--muted);background:transparent;display:grid;place-items:center;padding:0;color:#fff;transition:background .15s,border-color .15s}
+.task.on .check{background:var(--done);border-color:var(--done)}
+.tbody{flex:1;min-width:0}
+.ttitle{font-size:18px;font-weight:600;line-height:1.4;text-wrap:balance}
+.ttime{font-size:15px;color:var(--muted);margin-top:2px}
+.task.on .ttitle{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.chip{flex:none;border-radius:99px;padding:7px 15px;font-size:14px;font-weight:600;white-space:nowrap}
+.c-job{background:var(--c-job-bg);color:var(--c-job-fg)}
+.c-eng{background:var(--c-eng-bg);color:var(--c-eng-fg)}
+.c-app{background:var(--c-app-bg);color:var(--c-app-fg)}
+.del{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:20px;line-height:1;color:var(--muted)}
+.task.goal .ttitle{font-size:17px}
+
+/* week bar and edit */
+.weekbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:22px}
+.weekbar .lbl{font-weight:600;text-align:center;flex:1;min-width:0}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:600}
+.pill[aria-pressed="true"]{background:var(--tab-on);color:var(--tab-on-text);border-color:var(--tab-on)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.addform{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--card);border:1px dashed var(--line);border-radius:22px;padding:16px;margin-bottom:12px}
+.addform .full{grid-column:1/-1}
+.addform input,.addform select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:11px 12px;min-height:46px}
+.addform label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+.btn{border:0;background:var(--tab-on);color:var(--tab-on-text);border-radius:14px;padding:12px 18px;font-weight:700;min-height:46px}
+
+/* picture */
+.ringrow{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{flex:none;position:relative;width:128px;height:128px}
+.ring svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+.ring .pc{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-num);font-weight:800;font-size:28px}
+.ringtxt{flex:1;min-width:150px}
+.ringtxt b{font-size:20px;display:block}
+.ringtxt span{color:var(--muted);font-size:15px}
+.minis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.mini{background:var(--bg);border-radius:16px;padding:12px 14px}
+.mini b{font-family:var(--font-num);font-size:22px;display:block;line-height:1.2}
+.mini span{font-size:13px;color:var(--muted)}
+.grid90{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.cell{aspect-ratio:1;border:0;border-radius:8px;padding:0;font-family:var(--font-num);font-size:10px;font-weight:600;color:var(--text);min-width:0;background:var(--lv0)}
+.cell.lv1{background:var(--lv1)} .cell.lv2{background:var(--lv2);color:#fff} .cell.lv3{background:var(--lv3);color:#fff} .cell.lv4{background:var(--lv4);color:#241a00}
+.cell.fut{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.cell.today{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--gold)}
+.cell[aria-pressed="true"]{outline:3px solid var(--text);outline-offset:1px}
+.legend{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:var(--muted)}
+.legend i{width:14px;height:14px;border-radius:4px;display:block}
+.catrow{margin-top:14px}
+.catrow .top{display:flex;justify-content:space-between;font-size:15px;font-weight:600;margin-bottom:6px}
+.catrow .top span:last-child{font-family:var(--font-num);color:var(--muted)}
+.catrow .bar{margin-top:0;height:10px}
+.catrow.c-job .bar i{background:var(--c-job-fg)} .catrow.c-eng .bar i{background:var(--c-eng-fg)} .catrow.c-app .bar i{background:var(--c-app-fg)}
+
+/* month */
+.phase{margin-bottom:18px}
+.phase-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.phase-h h3{margin:0;font-size:19px}
+.phase-h small{display:block;color:var(--muted);font-size:14px;font-weight:400;margin-top:2px}
+.phase-h .tag{font-size:12px;font-weight:700;border-radius:99px;padding:3px 12px;background:var(--tab);color:var(--text)}
+.phase-h .tag.now{background:var(--gold);color:#241a00}
+.phase .bar{margin:0 0 12px}
+.startrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.startrow input{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-height:44px}
+
+/* notes */
+textarea.notes{width:100%;min-height:320px;resize:vertical;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px 20px;line-height:1.8;font-size:17px}
+.notestate{color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
+
+.foot{text-align:center;color:var(--muted);font-size:13px;padding-block:6px 18px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:380px){.ttitle{font-size:16px}.task{padding:15px 14px;gap:10px}.chip{padding:6px 11px;font-size:13px}.check{width:34px;height:34px}.stat{padding:16px}.stat .val{font-size:28px}}
+</style>
+
+<div id="app" lang="ar" dir="rtl">
+  <header class="hero">
+    <div class="wrap">
+      <div class="brand">
+        <div>
+          <h1><bdi dir="ltr">ABBAS <span>PLANNER</span></bdi></h1>
+          <p>رحلتك نحو نسخة أفضل منك • 90 يوماً</p>
+        </div>
+        <svg class="star" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5c.6 5.2 2.8 8.9 10.5 10.5-7.7 1.6-9.9 5.3-10.5 10.5C11.4 17.3 9.2 13.6 1.5 12 9.2 10.4 11.4 6.7 12 1.5z"/></svg>
+      </div>
+      <div class="quote"><small>اقتباس اليوم</small><p id="quote"></p></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="stats" id="stats" aria-label="ملخص الأسبوع"></section>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="أقسام المخطط"></nav>
+    <main id="view"></main>
+    <p class="foot" id="foot"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var DAYS=['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+  var MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  var CATS={job:'مهنة',eng:'إنجليزي',app:'تطبيق'};
+  var TABS=[['week','الأسبوع'],['picture','صورتي التفاعلية'],['month','الخطة الشهرية'],['notes','ملاحظاتي']];
+  var QUOTES=[
+    'الراحة جزء من الخطة، وليست انسحاباً منها.',
+    'خطوة صغيرة كل يوم تتفوق على قفزة واحدة ثم توقف.',
+    'لا تنتظر الحماس، ابدأ وسيلحق بك.',
+    'الانضباط أن تفعل ما قررته حتى بعد أن يزول المزاج الذي قرره.',
+    'ما تكرره كل يوم يصنع هويتك.',
+    'تقدّم بطيء أفضل من توقف مريح.',
+    'ركّز على اليوم، فالتسعون يوماً تُبنى من أيام.',
+    'الإتقان يأتي من التكرار الهادئ.',
+    'اجعل الخطة أصغر من عذرك.',
+    'كل علامة صح وعدٌ وفّيت به لنفسك.'
+  ];
+  var PHASES=[
+    {t:'الشهر الأول: التأسيس',g:['إعداد ملف خدماتي في العمل الحر وتحديد فئة العملاء','إنهاء الوحدات الأولى من الإنجليزية للمبتدئين','قراءة أساسيات إدارة الأعمال وتدوين ملخص لكل فصل','الالتزام بالروتين الأسبوعي دون انقطاع أسبوعين متتاليين']},
+    {t:'الشهر الثاني: البناء',g:['إدارة مشروع تجريبي كامل من البداية إلى التسليم','التدرب على محادثة إنجليزية قصيرة مرتين كل أسبوع','إعداد وصف وظيفي وسياسة داخلية نموذجية في الموارد البشرية','مراجعة منتصف الرحلة وتعديل الخطة حسب ما نجح']},
+    {t:'الشهر الثالث: الإتقان',g:['الحصول على أول مشروع حقيقي مدفوع','إنهاء مستوى المبتدئين وإجراء اختبار ذاتي','تقديم مشروع تطبيقي في الأعمال والموارد البشرية','كتابة تقييم نهاية الرحلة وخطة التسعين يوماً التالية']}
+  ];
+  var CHECK='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var KEY='abbas-planner-v1';
+
+  function pad(n){return String(n).padStart(2,'0');}
+  function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+  function parse(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+  function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+  function dayIdx(d){return (d.getDay()+1)%7;}
+  function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());}
+  function diffDays(a,b){return Math.round((a-b)/86400000);}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function key(d,id){return iso(d)+'|'+id;}
+  function dlabel(d){return d.getDate()+' '+MONTHS[d.getMonth()];}
+
+  function defaultTasks(){
+    var base=[['job','العمل الحر وإدارة المشاريع','06:00','06:50'],['eng','الإنجليزية للمبتدئين','13:00','13:30'],['app','إدارة الأعمال والموارد البشرية','19:00','19:50']];
+    var out=[];
+    for(var d=0;d<7;d++){base.forEach(function(b,i){out.push({id:'d'+d+'-'+i,day:d,cat:b[0],title:b[1],from:b[2],to:b[3]});});}
+    return out;
+  }
+  function defaults(){return {v:1,start:iso(today()),tasks:defaultTasks(),done:{},goals:{},notes:'',updated:0};}
+  function normalize(r){
+    var d=defaults(),o=Object.assign(d,r||{});
+    if(!Array.isArray(o.tasks)||!o.tasks.length){o.tasks=defaults().tasks;}
+    if(!o.done||typeof o.done!=='object'){o.done={};}
+    if(!o.goals||typeof o.goals!=='object'){o.goals={};}
+    if(typeof o.notes!=='string'){o.notes='';}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(o.start||'')){o.start=iso(today());}
+    return o;
+  }
+
+  var S=defaults();
+  try{var raw=localStorage.getItem(KEY);if(raw){S=normalize(JSON.parse(raw));}}catch(e){}
+  var ui={view:'week',weekOffset:0,edit:false,picked:null,store:'local'};
+
+  /* persistence: browser storage right away, the artifact database once it answers */
+  var dbRef=null,timer=null,pushing=false,dirty=false;
+  function persist(){
+    S.updated=Date.now();
+    try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+    scheduleDb();
+  }
+  function scheduleDb(){if(!dbRef){return;}dirty=true;clearTimeout(timer);timer=setTimeout(flush,800);}
+  function flush(){
+    if(!dbRef||!dirty){return;}
+    if(pushing){timer=setTimeout(flush,400);return;}
+    pushing=true;dirty=false;
+    dbRef.set({json:JSON.stringify(S),updated:S.updated}).then(function(){ui.store='cloud';renderFoot();}).catch(function(){ui.store='local';renderFoot();}).then(function(){pushing=false;if(dirty){timer=setTimeout(flush,400);}});
+  }
+  function initDb(){
+    if(!window.claude||!window.claude.use){return;}
+    Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(r){
+      var db=r[0],user=r[1];
+      if(!db||!user){return null;}
+      return user.id().then(function(id){
+        if(!id){return null;}
+        dbRef=db.doc('data/users/'+id+'/planner');
+        return dbRef.get().then(function(snap){
+          var remote=null;
+          if(snap.exists){try{remote=JSON.parse(snap.data().json);}catch(e){remote=null;}}
+          if(remote&&(remote.updated||0)>(S.updated||0)){
+            S=normalize(remote);
+            try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+            ui.store='cloud';render();
+          }else if(S.updated){
+            dirty=true;flush();
+          }else{ui.store='cloud';renderFoot();}
+        });
+      });
+    }).catch(function(){});
+  }
+
+  /* derived data */
+  function tasksFor(i){return S.tasks.filter(function(t){return t.day===i;}).sort(function(a,b){return a.from<b.from?-1:a.from>b.from?1:0;});}
+  function doneOn(d){return tasksFor(dayIdx(d)).filter(function(t){return S.done[key(d,t.id)];}).length;}
+  function weekDates(){var t=today(),ws=addDays(t,-dayIdx(t)+ui.weekOffset*7);return [0,1,2,3,4,5,6].map(function(i){return addDays(ws,i);});}
+  function weekCounts(){
+    var done=0,total=0;
+    weekDates().forEach(function(d,i){var ts=tasksFor(i);total+=ts.length;done+=ts.filter(function(t){return S.done[key(d,t.id)];}).length;});
+    return {done:done,total:total};
+  }
+  function journey(){
+    var start=parse(S.start),t=today(),n=diffDays(t,start)+1;
+    return {start:start,dayNum:n,shown:Math.max(0,Math.min(n,90))};
+  }
+  function timeLabel(f,t){
+    function per(h){return h<12?'صباحاً':h<16?'ظهراً':h<21?'مساءً':'ليلاً';}
+    function part(s){var p=s.split(':').map(Number);return {txt:(p[0]%12||12)+':'+pad(p[1]),p:per(p[0])};}
+    var a=part(f),b=part(t);
+    if(a.p===b.p){return '<bdi dir="ltr">'+a.txt+'–'+b.txt+'</bdi> '+a.p;}
+    return '<bdi dir="ltr">'+a.txt+'</bdi> '+a.p+' – <bdi dir="ltr">'+b.txt+'</bdi> '+b.p;
+  }
+
+  /* views */
+  var app=document.getElementById('app');
+  function renderQuote(){
+    var t=today(),n=Math.floor(t.getTime()/86400000);
+    document.getElementById('quote').textContent=QUOTES[((n%QUOTES.length)+QUOTES.length)%QUOTES.length];
+  }
+  function renderStats(){
+    var c=weekCounts(),pct=c.total?Math.round(c.done/c.total*100):0;
+    document.getElementById('stats').innerHTML=
+      '<div class="stat"><div class="lbl">'+(ui.weekOffset===0?'إنجاز هذا الأسبوع':'إنجاز الأسبوع')+'</div><div class="val"><bdi dir="ltr">'+pct+'%</bdi></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div></div>'+
+      '<div class="stat"><div class="lbl">المهام المكتملة</div><div class="val"><bdi dir="ltr">'+c.done+' / '+c.total+'</bdi></div><div class="sub">كل خطوة محسوبة</div></div>';
+  }
+  function renderTabs(){
+    document.getElementById('tabs').innerHTML=TABS.map(function(t){
+      return '<button type="button" class="tab" role="tab" id="tab-'+t[0]+'" aria-selected="'+(ui.view===t[0])+'" data-act="tab" data-v="'+t[0]+'">'+t[1]+'</button>';
+    }).join('');
+  }
+  function renderFoot(){
+    document.getElementById('foot').textContent=ui.store==='cloud'?'تقدمك محفوظ في حسابك':'تقدمك محفوظ على هذا الجهاز';
+  }
+  function taskRow(t,d,del){
+    var on=!!S.done[key(d,t.id)];
+    return '<div class="task'+(on?' on':'')+'" data-date="'+iso(d)+'" data-id="'+esc(t.id)+'">'+
+      '<button type="button" class="check" role="checkbox" aria-checked="'+on+'" aria-label="'+esc(t.title)+'">'+(on?CHECK:'')+'</button>'+
+      '<div class="tbody"><div class="ttitle">'+esc(t.title)+'</div><div class="ttime">'+timeLabel(t.from,t.to)+'</div></div>'+
+      '<span class="chip c-'+esc(t.cat)+'">'+esc(CATS[t.cat]||t.cat)+'</span>'+
+      (del?'<button type="button" class="del" data-act="del" data-id="'+esc(t.id)+'" aria-label="حذف المهمة">×</button>':'')+
+    '</div>';
+  }
+  function viewWeek(){
+    var ds=weekDates(),t0=today(),h='';
+    h+='<div class="weekbar"><button type="button" class="pill" data-act="prev">السابق</button><div class="lbl">'+dlabel(ds[0])+' – '+dlabel(ds[6])+'</div><button type="button" class="pill" data-act="next">التالي</button></div>';
+    h+='<div class="tools">'+(ui.weekOffset!==0?'<button type="button" class="pill" data-act="thisweek">العودة لهذا الأسبوع</button>':'')+'<button type="button" class="pill" data-act="edit" aria-pressed="'+ui.edit+'">'+(ui.edit?'إنهاء التعديل':'تعديل الخطة')+'</button></div>';
+    ds.forEach(function(d,i){
+      var isToday=iso(d)===iso(t0);
+      h+='<h2 class="sec-title">'+DAYS[i]+'<small>'+dlabel(d)+'</small>'+(isToday?'<em>اليوم</em>':'')+'</h2>';
+      tasksFor(i).forEach(function(t){h+=taskRow(t,d,ui.edit);});
+      if(ui.edit){
+        h+='<form class="addform" data-day="'+i+'">'+
+          '<div class="full"><label for="nt-'+i+'">مهمة جديدة ليوم '+DAYS[i]+'</label><input id="nt-'+i+'" name="title" type="text" maxlength="80" placeholder="اسم المهمة" required></div>'+
+          '<div><label for="nc-'+i+'">التصنيف</label><select id="nc-'+i+'" name="cat"><option value="job">مهنة</option><option value="eng">إنجليزي</option><option value="app">تطبيق</option></select></div>'+
+          '<div></div>'+
+          '<div><label for="nf-'+i+'">من</label><input id="nf-'+i+'" name="from" type="time" value="08:00" required></div>'+
+          '<div><label for="ne-'+i+'">إلى</label><input id="ne-'+i+'" name="to" type="time" value="08:30" required></div>'+
+          '<div class="full"><button type="submit" class="btn">إضافة المهمة</button></div></form>';
+      }
+    });
+    return h;
+  }
+  function overall(){
+    var j=journey(),done=0,total=0,cats={job:[0,0],eng:[0,0],app:[0,0]},streak=0,i,d;
+    for(i=0;i<j.shown;i++){
+      d=addDays(j.start,i);
+      tasksFor(dayIdx(d)).forEach(function(t){
+        var on=!!S.done[key(d,t.id)];total++;if(on){done++;}
+        if(cats[t.cat]){cats[t.cat][1]++;if(on){cats[t.cat][0]++;}}
+      });
+    }
+    for(i=j.shown-1;i>=0;i--){
+      d=addDays(j.start,i);
+      if(doneOn(d)>0){streak++;}else if(i===j.shown-1&&iso(d)===iso(today())){continue;}else{break;}
+    }
+    return {j:j,done:done,total:total,cats:cats,streak:streak};
+  }
+  function viewPicture(){
+    var o=overall(),j=o.j,t0=today(),pct=o.total?Math.round(o.done/o.total*100):0,C=2*Math.PI*52,h='';
+    h+='<h2 class="sec-title">صورة رحلتك</h2><div class="card"><div class="ringrow">'+
+      '<div class="ring"><svg viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="52" fill="none" stroke="var(--track)" stroke-width="12"/><circle cx="64" cy="64" r="52" fill="none" stroke="var(--gold)" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-pct/100)).toFixed(1)+'"/></svg><div class="pc"><bdi dir="ltr">'+pct+'%</bdi></div></div>'+
+      '<div class="ringtxt"><b>'+(j.dayNum<1?'تبدأ الرحلة بعد '+(1-j.dayNum)+' يوم':j.dayNum>90?'اكتملت الأيام التسعون':'اليوم '+j.dayNum+' من 90')+'</b><span>أنجزت '+o.done+' مهمة من '+o.total+' حتى الآن</span></div></div>'+
+      '<div class="minis"><div class="mini"><b>'+o.streak+'</b><span>أيام متتالية فيها إنجاز</span></div><div class="mini"><b>'+Math.max(0,90-j.shown)+'</b><span>يوماً متبقياً</span></div></div></div>';
+    h+='<h2 class="sec-title">الأيام التسعون<small>اضغط على يوم لرؤية تفاصيله</small></h2><div class="card"><div class="grid90">';
+    var pick=ui.picked&&diffDays(parse(ui.picked),j.start)>=0&&diffDays(parse(ui.picked),j.start)<90?ui.picked:(j.shown>0&&j.dayNum<=90?iso(t0):iso(j.start));
+    for(var i=0;i<90;i++){
+      var d=addDays(j.start,i),ts=tasksFor(dayIdx(d)).length,dn=doneOn(d),fut=d>t0,r=ts?dn/ts:0,lv=r===0?0:r<.34?1:r<.67?2:r<1?3:4;
+      h+='<button type="button" class="cell '+(fut&&dn===0?'fut':'lv'+lv)+(iso(d)===iso(t0)?' today':'')+'" data-act="pick" data-date="'+iso(d)+'" aria-pressed="'+(iso(d)===pick)+'" aria-label="اليوم '+(i+1)+': '+dn+' من '+ts+' مهام">'+(i+1)+'</button>';
+    }
+    h+='</div><div class="legend"><span>أقل</span><i style="background:var(--lv0)"></i><i style="background:var(--lv1)"></i><i style="background:var(--lv2)"></i><i style="background:var(--lv3)"></i><i style="background:var(--lv4)"></i><span>يوم كامل</span></div></div>';
+    var pd=parse(pick),pi=diffDays(pd,j.start);
+    h+='<h2 class="sec-title">اليوم '+(pi+1)+'<small>'+DAYS[dayIdx(pd)]+' '+dlabel(pd)+'</small></h2>';
+    tasksFor(dayIdx(pd)).forEach(function(t){h+=taskRow(t,pd,false);});
+    h+='<h2 class="sec-title">التقدم حسب المجال</h2><div class="card">';
+    Object.keys(CATS).forEach(function(k,n){
+      var c=o.cats[k],p=c[1]?Math.round(c[0]/c[1]*100):0;
+      h+='<div class="catrow c-'+k+'" style="'+(n===0?'margin-top:0':'')+'"><div class="top"><span>'+CATS[k]+'</span><span><bdi dir="ltr">'+c[0]+' / '+c[1]+'</bdi></span></div><div class="bar"><i style="width:'+p+'%"></i></div></div>';
+    });
+    return h+'</div>';
+  }
+  function viewMonth(){
+    var j=journey(),h='<h2 class="sec-title">الخطة الشهرية</h2><div class="card"><div class="startrow"><label for="start">تاريخ بداية الرحلة</label><input id="start" type="date" value="'+esc(S.start)+'"></div></div>';
+    PHASES.forEach(function(p,pi){
+      var a=addDays(j.start,pi*30),b=addDays(j.start,pi*30+29),dn=0,cur=j.dayNum>pi*30&&j.dayNum<=pi*30+30;
+      p.g.forEach(function(_,gi){if(S.goals['g'+pi+'-'+gi]){dn++;}});
+      var pct=Math.round(dn/p.g.length*100),tag=cur?'<span class="tag now">الحالي</span>':(j.dayNum>pi*30+30?'<span class="tag">انتهى</span>':'<span class="tag">قادم</span>');
+      h+='<section class="phase"><div class="phase-h" style="margin-top:22px"><h3>'+p.t+'<small>'+dlabel(a)+' – '+dlabel(b)+'</small></h3>'+tag+'</div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div>';
+      p.g.forEach(function(g,gi){
+        var id='g'+pi+'-'+gi,on=!!S.goals[id];
+        h+='<div class="task goal'+(on?' on':'')+'" data-goal="'+id+'"><button type="button" class="check" role="checkbox" aria-checked="'+on+'" aria-label="'+esc(g)+'">'+(on?CHECK:'')+'</button><div class="tbody"><div class="ttitle">'+esc(g)+'</div></div></div>';
+      });
+      h+='</section>';
+    });
+    return h;
+  }
+  function viewNotes(){
+    return '<h2 class="sec-title">ملاحظاتي</h2><label for="notes" class="muted" style="display:block;margin-bottom:8px;font-size:14px">دوّن ما تعلمته اليوم، وما تريد تحسينه غداً.</label><textarea id="notes" class="notes" placeholder="اكتب هنا...">'+esc(S.notes)+'</textarea><div class="notestate" id="notestate" aria-live="polite"></div>';
+  }
+  function renderView(){
+    var el=document.getElementById('view'),h=ui.view==='picture'?viewPicture():ui.view==='month'?viewMonth():ui.view==='notes'?viewNotes():viewWeek();
+    el.innerHTML=h;
+    el.setAttribute('role','tabpanel');
+    el.setAttribute('aria-labelledby','tab-'+ui.view);
+    if(ui.view==='notes'){
+      var ta=document.getElementById('notes'),st=document.getElementById('notestate'),nt=null;
+      ta.addEventListener('input',function(){
+        st.textContent='جارٍ الحفظ…';
+        clearTimeout(nt);
+        nt=setTimeout(function(){S.notes=ta.value;persist();st.textContent='تم الحفظ';},500);
+      });
+    }
+  }
+  function render(){renderQuote();renderStats();renderTabs();renderView();renderFoot();}
+
+  /* events */
+  function setView(v){
+    if(!TABS.some(function(t){return t[0]===v;})){v='week';}
+    ui.view=v;
+    renderTabs();renderView();
+  }
+  app.addEventListener('click',function(e){
+    var el=e.target.closest('[data-act]'),act=el&&el.getAttribute('data-act');
+    if(act==='tab'){var v=el.getAttribute('data-v');try{location.hash=v;}catch(x){}setView(v);return;}
+    if(act==='prev'){ui.weekOffset--;renderStats();renderView();return;}
+    if(act==='next'){ui.weekOffset++;renderStats();renderView();return;}
+    if(act==='thisweek'){ui.weekOffset=0;renderStats();renderView();return;}
+    if(act==='edit'){ui.edit=!ui.edit;renderView();return;}
+    if(act==='pick'){ui.picked=el.getAttribute('data-date');renderView();return;}
+    if(act==='del'){
+      var id=el.getAttribute('data-id');
+      S.tasks=S.tasks.filter(function(t){return t.id!==id;});
+      persist();renderStats();renderView();return;
+    }
+    var row=e.target.closest('.task');
+    if(!row){return;}
+    var g=row.getAttribute('data-goal');
+    if(g){if(S.goals[g]){delete S.goals[g];}else{S.goals[g]=1;}persist();renderView();return;}
+    var k=row.getAttribute('data-date')+'|'+row.getAttribute('data-id');
+    if(S.done[k]){delete S.done[k];}else{S.done[k]=1;}
+    persist();renderStats();renderView();
+  });
+  app.addEventListener('submit',function(e){
+    var f=e.target.closest('.addform');
+    if(!f){return;}
+    e.preventDefault();
+    var fd=new FormData(f),title=String(fd.get('title')||'').trim();
+    if(!title){return;}
+    var from=String(fd.get('from')||'08:00'),to=String(fd.get('to')||'08:30');
+    S.tasks.push({id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),day:Number(f.getAttribute('data-day')),cat:String(fd.get('cat')||'job'),title:title,from:from,to:to>from?to:from});
+    persist();renderStats();renderView();
+  });
+  app.addEventListener('change',function(e){
+    if(e.target.id==='start'&&/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)){S.start=e.target.value;persist();renderView();}
+  });
+  window.addEventListener('hashchange',function(){setView((location.hash||'').replace('#',''));});
+
+  var h0=(location.hash||'').replace('#','');
+  if(h0){ui.view=TABS.some(function(t){return t[0]===h0;})?h0:'week';}
+  render();
+  initDb();
+})();
+</script>
+</html>
